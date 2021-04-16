@@ -23,21 +23,21 @@
             android:textSize="30sp" />
 
         <EditText
-            android:id="@+id/editTextMail"
+            android:id="@+id/etSignInMail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20sp"
             android:ems="10"
-            android:hint="@string/SignIn_Mail"
+            android:hint="@string/Hint_Mail"
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editTextPassword"
+            android:id="@+id/etSignInPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
             android:ems="10"
-            android:hint="@string/SignIn_Password"
+            android:hint="@string/Hint_Password"
             android:inputType="textPassword" />
 
         <ProgressBar
@@ -79,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
+            android:onClick="toSignUp"
             android:paddingTop="15sp"
             android:paddingBottom="15sp"
             android:text="@string/SignIn_SignUp"
