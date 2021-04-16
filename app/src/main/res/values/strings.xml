@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">DSM-Project</string>
+    <string name="SignIn_WelcomeText">Inicio de sesión</string>
+    <string name="SignIn_Mail">Correo electrónico</string>
+    <string name="SignIn_Password">Contraseña</string>
+    <string name="SignIn_SignIn">Enviar</string>
+    <string name="SignIn_SignInGoogle">Iniciar con Google</string>
+    <string name="SignIn_SignUp">Regístrarte</string>
 </resources>
