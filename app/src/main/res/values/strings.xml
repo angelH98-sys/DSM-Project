@@ -8,6 +8,7 @@
     <string name="SignIn_SignUp">Regístrarte</string>
 
     <string name="SignUp_WelcomeText">Regístro de usuarios</string>
+    <string name="SignUp_PasswordPattern">Tu contraseña debe cumplir con:</string>
 
     <string name="Hint_Mail">Correo electrónico</string>
     <string name="Hint_Password">Contraseña</string>
@@ -16,5 +17,10 @@
     <string name="Hint_DUI">DUI</string>
     <string name="Hint_Address">Dirección</string>
     <string name="Hint_Phone">Teléfono</string>
+    <string name="Hint_PasswordLength">Almenos 8 caracteres</string>
+    <string name="Hint_PasswordUpper">Mayusculas</string>
+    <string name="Hint_PasswordLower">Minusculas</string>
+    <string name="Hint_PasswordNumbers">Números</string>
+    <string name="Hint_PasswordSymbols">Símbolos: @$!%*?</string>
 
 </resources>
