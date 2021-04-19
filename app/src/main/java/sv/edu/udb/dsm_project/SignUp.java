@@ -89,13 +89,15 @@ public class SignUp extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.R)
     private void createUser(){
 
-        db.collection("clientes").add(Map.ofEntries(
+        db.collection("usuarios").add(Map.ofEntries(
                 entry("nombre", etName.getText().toString()),
                 entry("telefono", etPhone.getText().toString()),
                 entry("dui", etDui.getText().toString()),
                 entry("direccion", etAddress.getText().toString()),
                 entry("correo", etMail.getText().toString()),
-                entry("uid", uid)
+                entry("uid", uid),
+                entry("estado", "Habilitado"),
+                entry("tipo", "Cliente")
         )).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
