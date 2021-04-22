@@ -48,7 +48,7 @@
             android:layout_marginTop="10sp" />
 
         <Button
-            android:id="@+id/buttonSignIn"
+            android:id="@+id/btnSignInSend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
@@ -65,7 +65,7 @@
             android:background="?android:attr/listDivider" />
 
         <Button
-            android:id="@+id/buttonGoogle"
+            android:id="@+id/btnSignInGoogle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
@@ -75,11 +75,10 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/buttonSignUp"
+            android:id="@+id/btnSignInSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:onClick="toSignUp"
             android:paddingTop="15sp"
             android:paddingBottom="15sp"
             android:text="@string/SignIn_SignUp"
