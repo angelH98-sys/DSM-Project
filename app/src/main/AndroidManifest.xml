@@ -11,8 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DSMProject">
-        <activity android:name=".Carrito"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Carrito">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
