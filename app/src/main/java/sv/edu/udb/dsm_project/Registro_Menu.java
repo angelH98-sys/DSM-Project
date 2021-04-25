@@ -18,44 +18,56 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Registro_Menu extends AppCompatActivity {
+import sv.edu.udb.dsm_project.Modelo.Producto;
 
+public class Registro_Menu extends AppCompatActivity {
     EditText Nomb,Descri,Precio;
     CheckBox Esta;
     Button btnGua;
     FirebaseFirestore db;
-    private static final String TAG = "DocSnippets";
+    Producto pd;
+    String TAG = "DocSnippets";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.registro_activity);
         Iniciar();
 
+        btnGua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pd.setNomb(Nomb.getText().toString());
+                pd.setPrec(Double.parseDouble(Precio.getText().toString()));
+                pd.setDesc(Descri.getText().toString());
+                pd.setDesc(Esta.getText().toString());
+                CrearDoc();
+            }
+        });
     }
     public void Iniciar()
     {
-        btnGua = (Button) findViewById(R.id.btnSend);
-        Nomb= findViewById(R.id.txtNombre);
-        Descri=findViewById(R.id.txtDescripcion);
-        Precio=findViewById(R.id.txtPrecio);
-        Esta=findViewById(R.id.chkEsta);
-
+        btnGua = (Button) findViewById(R.id.btnGuar);
+        Nomb= (EditText) findViewById(R.id.txtNombre);
+        Descri=(EditText)findViewById(R.id.txtDescripcion);
+        Precio=(EditText)findViewById(R.id.txtPrecio);
+        Esta= (CheckBox) findViewById(R.id.chkEsta);
+        pd = new Producto();
         db= FirebaseFirestore.getInstance();
-        CrearDoc();
+
     }
 
     public void CrearDoc()
     {
-        // Create a new user with a first and last name
-        Map<String, Object> user = new HashMap<String, Object>();
-        user.put("first", "Ada");
-        user.put("last", "Lovelace");
-        user.put("born", 1815);
+        Map<String, Object> prod = new HashMap<String, Object>();
+        prod.put("Nombre", pd.getNomb());
+        prod.put("Precio", pd.getPrec());
+        prod.put("Descripcion", pd.getDesc());
+        prod.put("Estado",pd.isEsta());
 
         // Add a new document with a generated ID
-        db.collection("Prueba")
-                .add(user)
+        db.collection("Producto")
+                .add(prod)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
