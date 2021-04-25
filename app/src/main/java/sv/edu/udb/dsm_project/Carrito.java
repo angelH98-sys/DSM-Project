@@ -5,30 +5,29 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import java.text.DecimalFormat;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 
 public class Carrito extends AppCompatActivity {
-
-    private TextView prueba;
+    private LinearLayout padre;
     FirebaseFirestore mFirestore;
     private String loginUser;
+    DecimalFormat df= new DecimalFormat("#.00");
     private List<productosTicket> productos = new ArrayList<productosTicket>();
 
     @Override
@@ -38,7 +37,7 @@ public class Carrito extends AppCompatActivity {
         //quemado
         loginUser="usuarioprueba123";
         mFirestore=FirebaseFirestore.getInstance();
-        prueba=(TextView)findViewById(R.id.prueba);
+        padre=(LinearLayout)findViewById(R.id.padre);
 
         obtenerDatos();
     }
@@ -75,10 +74,12 @@ public class Carrito extends AppCompatActivity {
                                 productos.add(new productosTicket(cantidad, id_producto, nombre, precio, subtotal));
                             }
                         }
+
                     }catch (Exception e){
                         Log.d("exception", e.toString());
                     }
                     Log.d("TAG", "onComplete: ");
+                    datos(padre);
                 }
             }
         });
@@ -100,6 +101,39 @@ public class Carrito extends AppCompatActivity {
         }
 
     }
+
+
+    public void datos(LinearLayout padre){
+        double total=0;
+        for (int i=0;i<productos.size();i++){
+            TextView nombre= new TextView(getApplicationContext());
+            TextView cantidad= new TextView(getApplicationContext());
+            TextView precio= new TextView(getApplicationContext());
+            TextView subprecio= new TextView(getApplicationContext());
+            TextView producto= new TextView(getApplicationContext());
+            producto.setText("Producto "+(i+1));
+            nombre.setText("Nombre: "+productos.get(i).nombre);
+            cantidad.setText("Cantidad: "+(int)productos.get(i).cantidad);
+            precio.setText("Precio $"+productos.get(i).precio.toString());
+            subprecio.setText("Sub total $"+df.format(productos.get(i).precio*productos.get(i).cantidad)+"\n\n");
+            total=total+productos.get(i).precio*productos.get(i).cantidad;
+            padre.addView(producto);
+            padre.addView(nombre);
+            padre.addView(cantidad);
+            padre.addView(precio);
+            padre.addView(subprecio);
+
+        }
+        TextView totalcompra= new TextView(getApplicationContext());
+        totalcompra.setText("Total de la compra = $"+df.format(total));
+        Button realizarCompra = new Button(getApplicationContext());
+        realizarCompra.setText("Realizar compra");
+        padre.addView(totalcompra);
+        padre.addView(realizarCompra);
+    }
+
+
+
 
 }
 
