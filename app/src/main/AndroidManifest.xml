@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DSMProject">
         <activity android:name=".Carrito">
+        <activity android:name=".SignUp"></activity>
+        <activity android:name=".SignIn" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
