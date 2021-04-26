@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DSMProject">
-
+        <activity android:name=".Registro_Menu" />
+        <activity android:name=".Contenido" />
         <activity
             android:name=".Splash"
             android:label="Splash Page"
