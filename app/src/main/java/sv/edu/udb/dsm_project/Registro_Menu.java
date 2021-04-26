@@ -1,5 +1,6 @@
 package sv.edu.udb.dsm_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +24,7 @@ import sv.edu.udb.dsm_project.Modelo.Producto;
 public class Registro_Menu extends AppCompatActivity {
     EditText Nomb,Descri,Precio;
     CheckBox Esta;
-    Button btnGua;
+    Button btnGua, btnMos;
     FirebaseFirestore db;
     Producto pd;
     String TAG = "DocSnippets";
@@ -40,13 +41,28 @@ public class Registro_Menu extends AppCompatActivity {
                 pd.setNomb(Nomb.getText().toString());
                 pd.setPrec(Double.parseDouble(Precio.getText().toString()));
                 pd.setDesc(Descri.getText().toString());
-                pd.setDesc(Esta.getText().toString());
+                pd.setEsta(Esta.isChecked());
                 CrearDoc();
+                Limpiar();
+            }
+        });
+        btnMos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Registro_Menu.this, Contenido.class));
             }
         });
     }
+    public void Limpiar()
+    {
+        Nomb.setText(null);
+        Precio.setText(null);
+        Descri.setText(null);
+        Esta.setChecked(false);
+    }
     public void Iniciar()
     {
+        btnMos= (Button) findViewById(R.id.btnMost);
         btnGua = (Button) findViewById(R.id.btnGuar);
         Nomb= (EditText) findViewById(R.id.txtNombre);
         Descri=(EditText)findViewById(R.id.txtDescripcion);
