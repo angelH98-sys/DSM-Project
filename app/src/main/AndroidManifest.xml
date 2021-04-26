@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DSMProject">
+        <activity android:name=".Carrito">
         <activity android:name=".SignUp"></activity>
         <activity android:name=".SignIn" />
         <activity android:name=".MainActivity">
