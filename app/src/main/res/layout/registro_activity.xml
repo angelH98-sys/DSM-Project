@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:ems="10"
         android:layout_weight="1"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:hint="Precio"
         android:layout_gravity="center_horizontal" />
 

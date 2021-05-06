@@ -5,6 +5,7 @@ public class Producto {
     private String Desc;
     private Double Prec;
     private boolean Esta;
+    String key;
 
     public Producto() {}
     public Producto(String Nomb,String Desc,Double Prec,boolean Esta)
@@ -13,6 +14,13 @@ public class Producto {
         this.Desc=Desc;
         this.Prec=Prec;
         this.Esta=Esta;
+    }
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
     public String getNomb() {
         return Nomb;

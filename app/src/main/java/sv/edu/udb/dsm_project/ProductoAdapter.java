@@ -1,58 +1,65 @@
 package sv.edu.udb.dsm_project;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 import sv.edu.udb.dsm_project.Modelo.Producto;
 
-public class ProductoAdapter extends FirestoreRecyclerAdapter<Producto,ProductoAdapter.ViewHolder> {
+public class ProductoAdapter extends ArrayAdapter<Producto> {
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options
      */
-    public ProductoAdapter(@NonNull FirestoreRecyclerOptions<Producto> options) {
-        super(options);
-    }
+    List<Producto> productos;
+    private Activity context;
 
-    @Override
-    protected void onBindViewHolder(@NonNull ViewHolder viewHolder, int i, @NonNull Producto producto) {
-        viewHolder.Nombre.setText(producto.getNomb());
-        viewHolder.Precio.setText(producto.getPrec().toString());
-        viewHolder.Descr.setText(producto.getDesc());
-        viewHolder.Esta.setText((producto.isEsta())?"True":"False");
-
+    public ProductoAdapter(@NonNull Activity context, @NonNull List<Producto> productos) {
+        super(context, R.layout.producto_layout, productos);
+        this.context = context;
+        this.productos = productos;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view= LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.contenido_activity, viewGroup,false);
-        return new ViewHolder(view);
-    }
+    public View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+        // Método invocado tantas veces como elementos tenga la coleccion personas
+        // para formar a cada item que se visualizara en la lista personalizada
+        LayoutInflater layoutInflater = context.getLayoutInflater();
+        View rowview=null;
+        // optimizando las diversas llamadas que se realizan a este método
+        // pues a partir de la segunda llamada el objeto view ya viene formado
+        // y no sera necesario hacer el proceso de "inflado" que conlleva tiempo y
+        // desgaste de bateria del dispositivo
+        if (view == null)
+            rowview = layoutInflater.inflate(R.layout.producto_layout,null);
+        else rowview = view;
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView  Nombre;
-        TextView Precio;
-        TextView Descr;
-       CheckBox Esta;
+        TextView Nomb= rowview.findViewById(R.id.lblNomb);
+        TextView Desc = rowview.findViewById(R.id.lblDes);
+        TextView Prec = rowview.findViewById(R.id.lblPre);
+        TextView Esta = rowview.findViewById(R.id.lblEsta);
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            Nombre = itemView.findViewById(R.id.lblNom2);
-            Precio = itemView.findViewById(R.id.lblPrec2);
-            Descr = itemView.findViewById(R.id.lblDesc2);
-            Esta = itemView.findViewById(R.id.chkEsta2);
+        Nomb.setText("Nombre : "+productos.get(position).getNomb());
+        Desc.setText("Descripcion : " + productos.get(position).getDesc());
+        Prec.setText("Precio : "+productos.get(position).getPrec());
+        Esta.setText("Estado : " + productos.get(position).isEsta());
 
-        }
+
+        return rowview;
     }
 }
