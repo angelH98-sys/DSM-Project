@@ -3,8 +3,10 @@ package sv.edu.udb.dsm_project.Modelo;
 public class Producto {
     private String Nomb;
     private String Desc;
+    private String Url;
     private Double Prec;
     private boolean Esta;
+    private String Estado;
     String key;
 
     public Producto() {}
@@ -52,5 +54,21 @@ public class Producto {
 
     public void setEsta(boolean esta) {
         Esta = esta;
+    }
+
+    public String getUrl() {
+        return Url;
+    }
+
+    public void setUrl(String url) {
+        Url = url;
+    }
+
+    public String getEstado() {
+        return Estado;
+    }
+
+    public void setEstado(String estado) {
+        Estado = estado;
     }
 }

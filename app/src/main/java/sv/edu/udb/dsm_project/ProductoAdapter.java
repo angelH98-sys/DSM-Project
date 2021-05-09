@@ -6,14 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 import sv.edu.udb.dsm_project.Modelo.Producto;
@@ -49,15 +55,28 @@ public class ProductoAdapter extends ArrayAdapter<Producto> {
             rowview = layoutInflater.inflate(R.layout.producto_layout,null);
         else rowview = view;
 
+
+
+
         TextView Nomb= rowview.findViewById(R.id.lblNomb);
         TextView Desc = rowview.findViewById(R.id.lblDes);
         TextView Prec = rowview.findViewById(R.id.lblPre);
         TextView Esta = rowview.findViewById(R.id.lblEsta);
+        ImageView url = rowview.findViewById(R.id.imgProd);
+
+
+
+        Picasso.get()
+
+        .load(productos.get(position).getUrl())
+        .resize(400, 600)
+        .centerCrop()
+        .into(url);
 
         Nomb.setText("Nombre : "+productos.get(position).getNomb());
-        Desc.setText("Descripcion : " + productos.get(position).getDesc());
+        Desc.setText("Descripción : " + productos.get(position).getDesc());
         Prec.setText("Precio : "+productos.get(position).getPrec());
-        Esta.setText("Estado : " + productos.get(position).isEsta());
+        Esta.setText("Estado : " + productos.get(position).getEstado());
 
 
         return rowview;

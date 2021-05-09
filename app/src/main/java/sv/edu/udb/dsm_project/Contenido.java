@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,7 +48,6 @@ import java.util.Map;
 import sv.edu.udb.dsm_project.Modelo.Producto;
 
 public class Contenido extends AppCompatActivity {
-
     FirebaseFirestore db;
     Producto pd ;
     String actualDoc;
@@ -92,7 +92,8 @@ public class Contenido extends AppCompatActivity {
                 intent.putExtra("nomb", productos.get(i).getNomb());
                 intent.putExtra("precio", productos.get(i).getPrec());
                 intent.putExtra("desc", productos.get(i).getDesc());
-                intent.putExtra("estado", productos.get(i).isEsta());
+                intent.putExtra("estado", productos.get(i).getEstado());
+                intent.putExtra("url", productos.get(i).getUrl());
                 startActivity(intent);
             }
         });
@@ -142,11 +143,10 @@ public class Contenido extends AppCompatActivity {
                 i.putExtra("accion","a"); // Agregar
                 i.putExtra("key","");
                 i.putExtra("nombre","");
-                i.putExtra("dui","");
-                i.putExtra("peso","");
-                i.putExtra("altura","");
-                i.putExtra("fecha","");
-                i.putExtra("genero","");
+                i.putExtra("desc","");
+                i.putExtra("prec","");
+                i.putExtra("esta","");
+               // i.putExtra("url","");
                 startActivity(i);
             }
         });
@@ -174,14 +174,17 @@ public class Contenido extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     pd=new Producto();
                                     actualDoc=document.getId();
+                                 //Llenando el objeto con los datos obtenidos
                                   obj = (JSONObject) parser.parse(gson.toJson(document.getData()));
                                    pd.setKey(actualDoc);
                                    pd.setNomb(obj.get("Nombre").toString());
                                    pd.setDesc(obj.get("Descripcion").toString());
-                                   pd.setEsta(Boolean.parseBoolean(obj.get("Estado").toString()));
+                                   pd.setEstado((Boolean.parseBoolean(obj.get("Estado").toString()))?"Habilitado":"Desabilitado");
+                                 //  pd.setEsta(Boolean.parseBoolean(obj.get("Estado").toString()));
                                    pd.setPrec(Double.parseDouble( obj.get("Precio").toString()));
+                                   pd.setUrl(obj.get("Url").toString());
                                     productos.add(pd);
-                                   //Agregar donde desea Nombre.setText(pd.getNomb());
+
                                 }
                                 ProductoAdapter adapter = new ProductoAdapter(Contenido.this,productos );
                                 listaProductos.setAdapter(adapter);

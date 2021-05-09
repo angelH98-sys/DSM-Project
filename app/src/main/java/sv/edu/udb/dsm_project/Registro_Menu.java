@@ -24,12 +24,12 @@ import java.util.Map;
 import sv.edu.udb.dsm_project.Modelo.Producto;
 
 public class Registro_Menu extends AppCompatActivity {
-    EditText Nomb,Descri,Precio;
+    EditText Nomb,Descri,Precio,Url;
     CheckBox Esta;
     Button btnGua, btnMos;
     FirebaseFirestore db;
     Producto pd;
-    String key="",nombre="",desc="",accion="";
+    String key="",nombre="",desc="",accion="",ur="",estado="";
     Double prec=0.0;
     Boolean estad=null;
     String TAG = "DocSnippets";
@@ -48,6 +48,7 @@ public class Registro_Menu extends AppCompatActivity {
                 pd.setPrec(Double.parseDouble(Precio.getText().toString()));
                 pd.setDesc(Descri.getText().toString());
                 pd.setEsta(Esta.isChecked());
+                pd.setUrl(Url.getText().toString());
                 CrearDoc();
                 Limpiar();
             }
@@ -70,6 +71,7 @@ public class Registro_Menu extends AppCompatActivity {
     {
         btnMos= (Button) findViewById(R.id.btnMost);
         btnGua = (Button) findViewById(R.id.btnGuar);
+        Url = (EditText) findViewById(R.id.txtUrl);
         Nomb= (EditText) findViewById(R.id.txtNombre);
         Descri=(EditText)findViewById(R.id.txtDescripcion);
         Precio=(EditText)findViewById(R.id.txtPrecio);
@@ -94,12 +96,14 @@ public void editar()
     nombre = datos.getString("nomb");
     prec = datos.getDouble("precio");
     desc = datos.getString("desc");
-    estad = datos.getBoolean("estado");
-
+    estado =datos.getString("estado");
+    estad = (estado.equals("Habilitado"))?true:false;
+    ur=datos.getString("url");
     Esta.setChecked(estad);
     Nomb.setText(nombre);
     Descri.setText(desc);
     Precio.setText(prec.toString());
+    Url.setText(ur);
 }
     public void CrearDoc()
     {
@@ -108,6 +112,7 @@ public void editar()
         prod.put("Precio", pd.getPrec());
         prod.put("Descripcion", pd.getDesc());
         prod.put("Estado",pd.isEsta());
+        prod.put("Url",pd.getUrl());
             if(accion.equals("e"))
             {
 
