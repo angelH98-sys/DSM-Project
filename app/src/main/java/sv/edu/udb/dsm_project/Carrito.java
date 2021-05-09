@@ -33,6 +33,7 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
+import org.w3c.dom.Text;
 
 public class Carrito extends AppCompatActivity {
     private LinearLayout padre;
@@ -186,7 +187,7 @@ public class Carrito extends AppCompatActivity {
             detalles.addView(nombre);
             detalles.addView(precio);
             detalles.addView(subprecio);
-            MoreLessButtons(acciones,(int)productos.get(i).cantidad);
+            MoreLessButtons(acciones,(int)productos.get(i).cantidad,(Double)productos.get(i).precio,(Double) productos.get(i).subtotal,subprecio);
             hijo.addView(detalles);
             hijo.addView(acciones);
             padre.addView(hijo);
@@ -195,7 +196,7 @@ public class Carrito extends AppCompatActivity {
         totapPagoTV.setText("Total de la compra = $"+df.format(total));
     }
 
-    private void MoreLessButtons(LinearLayout v,int cant){
+    private void MoreLessButtons(LinearLayout v,int cant, Double precio, Double subtotal,TextView subtotalText){
         TextView cantidad = new TextView(v.getContext());
         cantidad.setText(String.valueOf(cant));
         Button add = new Button(v.getContext());
@@ -206,8 +207,7 @@ public class Carrito extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String texto= (String) cantidad.getText();
-                masProducto(cantidad,texto);
+                masProducto(cant,precio,subtotal,cantidad,subtotalText);
             }
         });
         v.addView(add);
@@ -221,8 +221,7 @@ public class Carrito extends AppCompatActivity {
         less.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String texto= (String) cantidad.getText();
-                menosProducto(cantidad,texto);
+                menosProducto(cant,precio,subtotal,cantidad,subtotalText);
             }
         });
         v.addView(less);
@@ -245,24 +244,25 @@ public class Carrito extends AppCompatActivity {
 
     //acciones
 
-    public void masProducto(TextView control,String cantidad){
-        int valor=Integer.parseInt(cantidad);
-        valor=valor+1;
-        control.setText(""+valor);
+    public void masProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto){
+        cantidad=1+Integer.parseInt(cantidadText.getText().toString());
+        subtotal=cantidad*precio;
+        subtotalTexto.setText("Sub total $"+df.format(subtotal));
+        cantidadText.setText(""+cantidad);
     }
 
-    public void menosProducto(TextView control,String cantidad){
-        if(Integer.parseInt(cantidad)>0){
-            int valor=Integer.parseInt(cantidad);
-            valor=valor-1;
-            control.setText(""+valor);
-        }else{
-
+    public void menosProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto){
+        if(cantidad>0){
+            cantidad=Integer.parseInt(cantidadText.getText().toString())-1;
+            subtotal=cantidad*precio;
+            subtotalTexto.setText("Sub total $"+df.format(subtotal));
+            cantidadText.setText(""+cantidad);
         }
+
     }
 
     public void eliminar(){
-        Toast.makeText(getApplicationContext(), "Se elimino la compra seleccionada", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Se elimino la compra", Toast.LENGTH_LONG).show();
     }
 
 }
