@@ -196,23 +196,73 @@ public class Carrito extends AppCompatActivity {
     }
 
     private void MoreLessButtons(LinearLayout v,int cant){
+        TextView cantidad = new TextView(v.getContext());
+        cantidad.setText(String.valueOf(cant));
         Button add = new Button(v.getContext());
         add.setCompoundDrawablesWithIntrinsicBounds(R.drawable.more_one,0,0,0);
         add.setLayoutParams(new LinearLayout.LayoutParams(100,100));
         add.setPadding(0,4,16,4);
         add.setLeft(0);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String texto= (String) cantidad.getText();
+                masProducto(cantidad,texto);
+            }
+        });
         v.addView(add);
-        TextView cantidad = new TextView(v.getContext());
-        cantidad.setText(String.valueOf(cant));
+
         v.addView(cantidad);
         Button less = new Button(v.getContext());
-        less.setCompoundDrawablesWithIntrinsicBounds(R.drawable.more_one,0,0,0);
+        less.setCompoundDrawablesWithIntrinsicBounds(R.drawable.less_one,0,0,0);
         less.setLayoutParams(new LinearLayout.LayoutParams(100,100));
         less.setPadding(0,4,16,4);
         less.setLeft(0);
+        less.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String texto= (String) cantidad.getText();
+                menosProducto(cantidad,texto);
+            }
+        });
         v.addView(less);
 
+        Button eliminar = new Button(v.getContext());
+        eliminar.setText("X");
+        eliminar.setLayoutParams(new LinearLayout.LayoutParams(100,100));
+        eliminar.setPadding(0,4,16,4);
+        eliminar.setLeft(0);
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eliminar();
+            }
+        });
+        v.addView(eliminar);
 
+
+    }
+
+    //acciones
+
+    public void masProducto(TextView control,String cantidad){
+        int valor=Integer.parseInt(cantidad);
+        valor=valor+1;
+        control.setText(""+valor);
+    }
+
+    public void menosProducto(TextView control,String cantidad){
+        if(Integer.parseInt(cantidad)>0){
+            int valor=Integer.parseInt(cantidad);
+            valor=valor-1;
+            control.setText(""+valor);
+        }else{
+
+        }
+    }
+
+    public void eliminar(){
+        Toast.makeText(getApplicationContext(), "Se elimino la compra seleccionada", Toast.LENGTH_LONG).show();
     }
 
 }
