@@ -187,7 +187,7 @@ public class Carrito extends AppCompatActivity {
             detalles.addView(nombre);
             detalles.addView(precio);
             detalles.addView(subprecio);
-            MoreLessButtons(acciones,(int)productos.get(i).cantidad,(Double)productos.get(i).precio,(Double) productos.get(i).subtotal,subprecio);
+            MoreLessButtons(acciones,(int)productos.get(i).cantidad,(Double)productos.get(i).precio,(Double) productos.get(i).subtotal,subprecio,total,totapPagoTV);
             hijo.addView(detalles);
             hijo.addView(acciones);
             padre.addView(hijo);
@@ -196,7 +196,7 @@ public class Carrito extends AppCompatActivity {
         totapPagoTV.setText("Total de la compra = $"+df.format(total));
     }
 
-    private void MoreLessButtons(LinearLayout v,int cant, Double precio, Double subtotal,TextView subtotalText){
+    private void MoreLessButtons(LinearLayout v,int cant, Double precio, Double subtotal,TextView subtotalText,Double total,TextView totalText){
         TextView cantidad = new TextView(v.getContext());
         cantidad.setText(String.valueOf(cant));
         Button add = new Button(v.getContext());
@@ -207,7 +207,7 @@ public class Carrito extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                masProducto(cant,precio,subtotal,cantidad,subtotalText);
+                masProducto(cant,precio,subtotal,cantidad,subtotalText,total,totalText);
             }
         });
         v.addView(add);
@@ -221,7 +221,7 @@ public class Carrito extends AppCompatActivity {
         less.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menosProducto(cant,precio,subtotal,cantidad,subtotalText);
+                menosProducto(cant,precio,subtotal,cantidad,subtotalText,total,totalText);
             }
         });
         v.addView(less);
@@ -244,19 +244,29 @@ public class Carrito extends AppCompatActivity {
 
     //acciones
 
-    public void masProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto){
-        cantidad=1+Integer.parseInt(cantidadText.getText().toString());
+    public void masProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto,Double total, TextView totalText){
+        String texto= totalText.getText().toString();
+        texto=texto.replace("Total de la compra = $","");
+        total=Double.parseDouble(texto);
+        total=total+precio;
+        cantidad=Integer.parseInt(cantidadText.getText().toString())+1;
         subtotal=cantidad*precio;
         subtotalTexto.setText("Sub total $"+df.format(subtotal));
         cantidadText.setText(""+cantidad);
+        totalText.setText("Total de la compra = $"+df.format(total));
     }
 
-    public void menosProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto){
-        if(cantidad>0){
-            cantidad=Integer.parseInt(cantidadText.getText().toString())-1;
+    public void menosProducto(int cantidad, Double precio, Double subtotal, TextView cantidadText, TextView subtotalTexto,Double total,TextView totalText){
+        String texto= totalText.getText().toString();
+        texto=texto.replace("Total de la compra = $","");
+        total=Double.parseDouble(texto);
+        total=total-precio;
+        cantidad=Integer.parseInt(cantidadText.getText().toString())-1;
+        if(cantidad>=0){
             subtotal=cantidad*precio;
             subtotalTexto.setText("Sub total $"+df.format(subtotal));
             cantidadText.setText(""+cantidad);
+            totalText.setText("Total de la compra = $"+df.format(total));
         }
 
     }
