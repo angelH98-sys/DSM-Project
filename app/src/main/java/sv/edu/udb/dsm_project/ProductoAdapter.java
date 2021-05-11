@@ -64,18 +64,15 @@ public class ProductoAdapter extends ArrayAdapter<Producto> {
         TextView Esta = rowview.findViewById(R.id.lblEsta);
         ImageView url = rowview.findViewById(R.id.imgProd);
 
-
-
         Picasso.get()
-
         .load(productos.get(position).getUrl())
-        .resize(400, 600)
+        .resize(300, 200)
         .centerCrop()
         .into(url);
 
         Nomb.setText("Nombre : "+productos.get(position).getNomb());
         Desc.setText("Descripción : " + productos.get(position).getDesc());
-        Prec.setText("Precio : "+productos.get(position).getPrec());
+        Prec.setText("Precio : $"+productos.get(position).getPrec());
         Esta.setText("Estado : " + productos.get(position).getEstado());
 
 
