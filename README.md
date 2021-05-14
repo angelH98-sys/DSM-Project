@@ -13,11 +13,17 @@ App de Restaurante esta leva mediante Android Studio y Java, la Aplicacion consi
 Google o mediante correo electronico, seguidamente llevara a un menu donde el usuario selecionara el tipo de menu que necesita pedir, se le agregara al carrito, dando la opcion
 de añadir o eliminar dichos menus, ya elejidos los menus se les generar un ticket donde se proporcionara la cantidad de menus que lleva y el total de sus compra, y se le mandara.
 
-GUia de Instalacion:
-Este programa se dara un instalacion mediante Play Store, descargandola en nuestro celular y asi poder usarla facil y rapido.
+Tipo de Licencias Creative Commons implementada:
+Attribution-NoDerivatives 3.0 IGO: Los usuarios pueden distribuir nuestra publicación para fines comerciales y no comerciales. La UNESCO deberá ser claramente identificada como propietaria de los derechos de autor de la publicación original. Cualquier reutilización o adaptación del contenido, incluyendo la utilización de partes del mismo o traducciones, necesitará la autorización previa y por escrito de Ediciones UNESCO.
 
-Requisito para Instalcion:
-Se necesitara tener un Android 4.4 para delante y asi funcionara correctamente el sistema de App de Restaurante
+Link Manual de Usuario:
+
+
+Link Manual Técnico:
+
+
+Link Los diseños Mock Ups:
+
 
 Workspace en Notion
 https://www.notion.so/invite/81d8910cb34a26b8664f00cb476319a2f0c9b435
