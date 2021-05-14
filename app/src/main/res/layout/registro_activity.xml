@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical"
     tools:context=".Registro_Menu">
 
@@ -13,47 +14,53 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
+        android:background="#FDFDFD"
         android:hint="Nombre"
         android:inputType="textPersonName" />
-
 
 
     <EditText
         android:id="@+id/txtPrecio"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:inputType="numberDecimal"
+        android:background="#FFFEFE"
+        android:ems="10"
         android:hint="Precio"
-        android:layout_gravity="center_horizontal" />
+        android:inputType="numberDecimal" />
 
 
     <EditText
         android:id="@+id/txtDescripcion"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:inputType="textPersonName"
+        android:background="#FBFBFB"
+        android:ems="10"
         android:hint="Descripcion"
-        android:layout_gravity="center_horizontal" />
+        android:inputType="textPersonName" />
+
     <EditText
         android:id="@+id/txtUrl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:inputType="textPersonName"
+        android:background="#FFFFFF"
+        android:ems="10"
         android:hint="URL"
-        android:layout_gravity="center_horizontal" />
+        android:inputType="textPersonName" />
 
     <CheckBox
         android:id="@+id/chkEsta"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="#FFFFFF"
         android:text="Activo" />
+
     <Button
         android:id="@+id/btnGuar"
         style="?android:attr/buttonStyleSmall"
@@ -61,7 +68,9 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:text="Guardar" />
+        android:text="Guardar"
+        app:backgroundTint="#F80000" />
+
     <Button
         android:id="@+id/btnMost"
         style="?android:attr/buttonStyleSmall"
@@ -69,8 +78,8 @@
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
-        android:text="Mostrar Datos" />
-
+        android:text="Mostrar Datos"
+        app:backgroundTint="#FF0000" />
 
 
 </LinearLayout>

@@ -22,6 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import sv.edu.udb.dsm_project.Modelo.Producto;
+
 public class SignIn extends AppCompatActivity {
 
     private Button btnSignInSend, btnSignInGoogle, btnSignInSignUp;
@@ -36,6 +38,12 @@ public class SignIn extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         initializeUI();
+        btnSignInSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignIn.this , Carrito.class));
+            }
+        });
     }
 
     public void initializeUI(){
@@ -53,6 +61,7 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
+
         btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +75,7 @@ public class SignIn extends AppCompatActivity {
 
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, 1);
+                startActivity(new Intent(SignIn.this , Carrito.class));
             }
         });
     }
@@ -83,6 +93,7 @@ public class SignIn extends AppCompatActivity {
                 Log.d("return", "firebaseAuthWithGoogle:" + account.getId());
                 Log.d("return", "idtoken:" + account.getIdToken());
                 firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("return", "Google sign in failed", e);

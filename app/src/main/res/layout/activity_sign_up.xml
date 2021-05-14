@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimarySplash"
     tools:context=".SignUp">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#000000"
         tools:layout_editor_absoluteX="55dp"
         tools:layout_editor_absoluteY="-216dp">
 
@@ -26,6 +28,7 @@
                 android:layout_marginTop="60sp"
                 android:gravity="center_horizontal"
                 android:text="@string/SignUp_WelcomeText"
+                android:textColor="#FFFFFF"
                 android:textSize="30sp" />
 
             <TextView
@@ -34,15 +37,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_Name" />
+                android:text="@string/Hint_Name"
+                android:textColor="#FFFFFF" />
 
             <EditText
                 android:id="@+id/etSignUpName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginBottom="10sp"
+                android:background="#F4F4F4"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/tvSignUpPhone"
@@ -50,12 +56,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_Phone" />
+                android:text="@string/Hint_Phone"
+                android:textColor="#FFFFFF" />
 
             <EditText
                 android:id="@+id/etSignUpPhone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:background="#FFFFFF"
                 android:ems="10"
                 android:inputType="number" />
 
@@ -65,14 +73,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_DUI" />
+                android:text="@string/Hint_DUI"
+                android:textColor="#FFFFFF"
+                android:textColorHighlight="#FFFFFF" />
 
             <EditText
                 android:id="@+id/etSignUpDUI"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:background="#F8F8F8"
                 android:ems="10"
-                android:inputType="number" />
+                android:inputType="number"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/tvSignUpAddress"
@@ -80,15 +92,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_Address" />
+                android:text="@string/Hint_Address"
+                android:textColor="#FFFFFF"/>
 
             <EditText
                 android:id="@+id/etSignUpAddress"
                 android:layout_width="match_parent"
-                android:layout_height="86dp"
+                android:layout_height="35dp"
+                android:background="#F4F4F4"
                 android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/tvSignUpMail"
@@ -96,14 +111,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_Mail" />
+                android:text="@string/Hint_Mail"
+                android:textColor="#FFFFFF"/>
 
             <EditText
                 android:id="@+id/etSignUpMail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:background="#F4F4F4"
                 android:ems="10"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textColor="#040404" />
 
             <View
                 android:id="@+id/divider3"
@@ -111,55 +129,68 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="20sp"
                 android:layout_marginBottom="20sp"
-                android:background="?android:attr/listDivider" />
+                android:background="?android:attr/listDivider"
+                android:textColor="#FFFFFF"/>
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10sp"
+                android:background="#000000"
                 android:gravity="center_horizontal"
                 android:text="@string/SignUp_PasswordPattern"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
             <CheckBox
                 android:id="@+id/cbSignUpPasswordLength"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#F8F8F8"
                 android:enabled="false"
                 android:text="@string/Hint_PasswordLength"
+                android:textColor="#000000"
                 android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/cbSignUpPasswordUpper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FBF7F7"
                 android:enabled="false"
                 android:text="@string/Hint_PasswordUpper"
+                android:textColor="#000000"
                 android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/cbSignUpPasswordLower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FFFFFF"
                 android:enabled="false"
                 android:text="@string/Hint_PasswordLower"
+                android:textColor="#000000"
                 android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/cbSignUpPasswordNumbers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FBFBFB"
                 android:enabled="false"
                 android:text="@string/Hint_PasswordNumbers"
+                android:textColor="#000000"
                 android:textSize="18sp" />
 
             <CheckBox
                 android:id="@+id/cbSignUpPasswordSymbols"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#FFFFFF"
                 android:enabled="false"
                 android:text="@string/Hint_PasswordSymbols"
+                android:textColor="#000000"
                 android:textSize="18sp" />
 
             <TextView
@@ -168,14 +199,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_Password" />
+                android:text="@string/Hint_Password"
+                android:textColor="#FFFFFF"/>
 
             <EditText
                 android:id="@+id/etSignUpPassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:background="#F4F4F4"
                 android:ems="10"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/tvSignUpConfirmationPassword"
@@ -183,22 +217,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5sp"
                 android:paddingLeft="10sp"
-                android:text="@string/Hint_ConfirmationPassword" />
+                android:text="@string/Hint_ConfirmationPassword"
+                android:textColor="#FFFFFF"/>
 
             <EditText
                 android:id="@+id/etSignUpConfirmationPassword"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginBottom="10sp"
+                android:background="#F4F4F4"
                 android:ems="10"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="#000000" />
 
             <ProgressBar
                 android:id="@+id/signUpProgressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="#FFFFFF"/>
 
             <Button
                 android:id="@+id/btnSignUpSend"
@@ -206,10 +244,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10sp"
                 android:layout_marginBottom="30sp"
+                android:background="#F60000"
                 android:paddingTop="10sp"
                 android:paddingBottom="10sp"
-                android:text="@string/SignIn_SignUp" />
-
+                android:text="@string/SignIn_SignUp"
+                app:backgroundTint="#FF0303" />
 
 
         </LinearLayout>
