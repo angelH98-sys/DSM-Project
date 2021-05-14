@@ -43,7 +43,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 
-public class SignUp extends AppCompatActivity {
+public class    SignUp extends AppCompatActivity {
 
     private EditText etName, etAddress, etDui, etPhone, etMail, etPassword, etConfirmationPassword;
     private TextView tvName, tvAddress, tvDui, tvPhone, tvMail, tvPassword, tvConfirmationPassword;
