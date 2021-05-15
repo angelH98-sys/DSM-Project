@@ -65,7 +65,7 @@ public class Carrito extends AppCompatActivity {
         Log.i("Usuario",loginUser);
 
         mFirestore.collection("tickets")
-            .whereEqualTo("id_usuario",loginUser)
+            .whereEqualTo("idusuario",loginUser)
             .whereEqualTo("estado","Borrador")
             .addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override

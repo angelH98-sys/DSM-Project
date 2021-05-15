@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,7 +36,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import sv.edu.udb.dsm_project.Modelo.Producto;
 
@@ -81,8 +84,10 @@ public class Contenido extends AppCompatActivity {
     }
 
     private void checkUserType(){
+
         db.collection("usuarios")
-                .whereEqualTo("uid", mAuth.getCurrentUser().getUid().toString()).get()
+                .whereEqualTo("uid", mAuth.getCurrentUser().getUid())
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -284,20 +289,29 @@ public class Contenido extends AppCompatActivity {
                             try {
 
                                 JSONObject obj;
-
+                                Boolean status;
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    obj = (JSONObject) parser.parse(gson.toJson(document.getData()));
+                                    status = (Boolean) obj.get("Estado");
+
                                     pd=new Producto();
                                     actualDoc=document.getId();
-                                 //Llenando el objeto con los datos obtenidos
-                                  obj = (JSONObject) parser.parse(gson.toJson(document.getData()));
-                                   pd.setKey(actualDoc);
-                                   pd.setNomb(obj.get("Nombre").toString());
-                                   pd.setDesc(obj.get("Descripcion").toString());
-                                   pd.setEstado((Boolean.parseBoolean(obj.get("Estado").toString()))?"Habilitado":"Desabilitado");
-                                 //  pd.setEsta(Boolean.parseBoolean(obj.get("Estado").toString()));
-                                   pd.setPrec(Double.parseDouble( obj.get("Precio").toString()));
-                                   pd.setUrl(obj.get("Url").toString());
-                                    productos.add(pd);
+                                    //Llenando el objeto con los datos obtenidos
+                                    pd.setKey(actualDoc);
+                                    pd.setNomb(obj.get("Nombre").toString());
+                                    pd.setDesc(obj.get("Descripcion").toString());
+                                    pd.setEstado((Boolean.parseBoolean(obj.get("Estado").toString()))?"Habilitado":"Desabilitado");
+                                    pd.setPrec(Double.parseDouble( obj.get("Precio").toString()));
+                                    pd.setUrl(obj.get("Url").toString());
+
+                                    if(status && !userIsAdmin){
+
+                                        productos.add(pd);
+                                    }else if(userIsAdmin){
+
+                                        productos.add(pd);
+                                    }
 
                                 }
                                 ProductoAdapter adapter = new ProductoAdapter(Contenido.this,productos );

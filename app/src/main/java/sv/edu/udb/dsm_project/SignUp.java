@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -107,6 +108,7 @@ public class    SignUp extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(getApplicationContext(), "Usuario registrado exitosamente", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(SignUp.this, SignIn.class));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
