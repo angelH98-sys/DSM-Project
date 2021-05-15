@@ -15,14 +15,18 @@ import androidx.annotation.Nullable;
 //import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
@@ -41,6 +45,7 @@ import java.util.Map;
 public class Carrito extends AppCompatActivity {
     private LinearLayout padre;
     FirebaseFirestore mFirestore;
+    FirebaseAuth mAuth;
     private String loginUser;
     DecimalFormat df= new DecimalFormat("#.00");
     private List<productosTicket> productos = new ArrayList<productosTicket>();
@@ -51,11 +56,13 @@ public class Carrito extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrito);
-        //quemado
-        loginUser="usuarioprueba123";
-        mFirestore=FirebaseFirestore.getInstance();
         padre=(LinearLayout)findViewById(R.id.padre);
         totapPagoTV = findViewById(R.id.totalPagar);
+        mFirestore=FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        loginUser= mAuth.getCurrentUser().getUid();//Con esto acceden al UID de la tabla de authenticaci&oacute;n de firebase
+
+        Log.i("Usuario",loginUser);
 
         mFirestore.collection("tickets")
             .whereEqualTo("id_usuario",loginUser)
@@ -69,12 +76,40 @@ public class Carrito extends AppCompatActivity {
                         return;
                     }
 //                    for (QueryDocumentSnapshot doc : snapshot)
+                    if(snapshot.isEmpty())
+//                        creaTicket("Se ha creado el ticket, Puede Seguir comprando");
+                        Log.i("Usuario","no hay ticket");
+                    else
                         prepararDatos(snapshot.getDocuments().get(0));
 //                        Log.w("TAG", "Data => ." + doc.toString());
 
                 }
             });
 
+    }
+
+    private void creaTicket(String msg) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("estado", "Borrador");
+        data.put("id_usuario", loginUser);
+        data.put("fechapago",null);
+        data.put("preciototal",0);
+        data.put("productos",null);
+
+        mFirestore.collection("tickets")
+            .add(data)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(),"Hubo un pequeño problema",Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void prepararDatos(DocumentSnapshot document){
@@ -133,29 +168,7 @@ public class Carrito extends AppCompatActivity {
                 "estado","Cancelado",
                 "fechapago", String.valueOf(new SimpleDateFormat("hh: mm: ss a dd-MMM-yyyy").format(new Date()))
         );
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("estado", "Borrador");
-        data.put("idusuario", loginUser);
-        data.put("fechapago",null);
-        data.put("preciototal",0);
-
-        mFirestore.collection("tickets")
-                .add(data)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i("info",documentReference.getId());
-                        Toast.makeText(getApplicationContext(),"Compra realizada con exito",Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Hubo un pequeño problema",Toast.LENGTH_SHORT).show();
-                        Log.i("info",e.toString());
-                    }
-                });
+        creaTicket("Compra realizada con exito");
 
     }
 

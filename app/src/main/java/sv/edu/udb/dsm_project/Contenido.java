@@ -24,9 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -79,6 +82,7 @@ public class Contenido extends AppCompatActivity {
     }
     private void inicializar() {
 
+        ticketExist();
         listaProductos = findViewById(R.id.ListaProductos);
         productos = new ArrayList<>();
         // Cuando el usuario haga clic en la lista (para editar registro)
@@ -199,5 +203,50 @@ public class Contenido extends AppCompatActivity {
                 });
 
     }
+    public void ticketExist(){
+        //instancia a base de datos FireStore
+        FirebaseFirestore mFirestore=FirebaseFirestore.getInstance();
+
+        //instancia a autenticacion de Firebase
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String loginUser= mAuth.getCurrentUser().getUid();
+        Log.i("info","ha pasado por aca: "+loginUser);
+        mFirestore.collection("tickets")
+                .whereEqualTo("id_usuario",loginUser)
+                .whereEqualTo("estado","Borrador")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful() && task.getResult().size()==0){
+                            Log.i("info","ha pasado por aca, esta vacio: "+String.valueOf(task.getResult().size()));
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("estado", "Borrador");
+                            data.put("id_usuario", loginUser);
+                            data.put("fechapago",null);
+                            data.put("preciototal",0);
+                            data.put("productos",0);
+
+                            mFirestore.collection("tickets")
+                                    .add(data)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Toast.makeText(getApplicationContext(),"Se ha creado el ticket, Puede Seguir comprando",Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(),"Hubo un pequeño problema",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    }
+                });
+    }
+
 }
 

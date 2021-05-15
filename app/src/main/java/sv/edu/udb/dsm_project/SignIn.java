@@ -83,6 +83,8 @@ public class SignIn extends AppCompatActivity {
                 Log.d("return", "firebaseAuthWithGoogle:" + account.getId());
                 Log.d("return", "idtoken:" + account.getIdToken());
                 firebaseAuthWithGoogle(account.getIdToken());
+//                Intent content = new Intent(SignIn.this,Contenido.class);
+//                startActivity((content));
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("return", "Google sign in failed", e);
@@ -101,6 +103,8 @@ public class SignIn extends AppCompatActivity {
                             Log.d("return", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d("return", user.getDisplayName());
+                            Intent content = new Intent(SignIn.this,Contenido.class);
+                            startActivity((content));
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("return", "signInWithCredential:failure", task.getException());
