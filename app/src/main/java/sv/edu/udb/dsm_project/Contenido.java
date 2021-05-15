@@ -1,6 +1,5 @@
 package sv.edu.udb.dsm_project;
 
-import android.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,42 +7,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import sv.edu.udb.dsm_project.Modelo.Producto;
 
@@ -54,34 +41,79 @@ public class Contenido extends AppCompatActivity {
     List<Producto> productos;
     ListView listaProductos;
     FloatingActionButton fab_agregar;
+    FirebaseAuth mAuth;
+
+    boolean userIsAdmin;
+    String ticketId;
+    List<products> productosEnTicket;
+    Double precioTotal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mostrar_activity);
-        db= FirebaseFirestore.getInstance();
-        fab_agregar= findViewById(R.id.fab_agregar);
+
         inicializar();
         obtenerDatos();
-      /*  fab_agregar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Cuando el usuario quiere agregar un nuevo registro
-                Intent i = new Intent(getBaseContext(), Registro_Menu.class);
-                i.putExtra("accion","a"); // Agregar
-                i.putExtra("key","");
-                i.putExtra("nomb","");
-                i.putExtra("desc","");
-                i.putExtra("prec","");
-                i.putExtra("esta","false");
-                startActivity(i);
-            }
-        });*/
     }
     private void inicializar() {
 
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        fab_agregar = findViewById(R.id.fab_agregar);
         listaProductos = findViewById(R.id.ListaProductos);
         productos = new ArrayList<>();
-        // Cuando el usuario haga clic en la lista (para editar registro)
+        productosEnTicket = new ArrayList<>();
+
+        checkUserType();
+        if(userIsAdmin){
+            setAdministratorActions();
+        }else{
+            setCustomerActions();
+        }
+
+
+    }
+
+    private void checkUserType(){
+        db.collection("usuarios")
+                .whereEqualTo("uid", mAuth.getCurrentUser().getUid().toString()).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+
+                            for (QueryDocumentSnapshot document: task.getResult()){
+                                if(document.get("tipo").toString() == "Admin"){
+                                    userIsAdmin = true;
+                                }else{
+                                    userIsAdmin = false;
+                                }
+                            }
+                        }else{
+                            userIsAdmin = false;
+                        }
+                    }
+                });
+
+        db.collection("tickets")
+                .whereEqualTo("idusuario", mAuth.getCurrentUser().getUid().toString())
+                .whereEqualTo("estado", "Borrador").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for(QueryDocumentSnapshot document: task.getResult()){
+
+                            ticketId = document.getId().toString();
+                        }
+                    }
+                });
+    }
+
+    private void setAdministratorActions(){
+
+        fab_agregar.setImageResource(R.drawable.add);
+
         listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -134,8 +166,7 @@ public class Contenido extends AppCompatActivity {
             }
         });
 
-
-     fab_agregar.setOnClickListener(new View.OnClickListener() {
+        fab_agregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Cuando el usuario quiere agregar un nuevo registro
@@ -146,30 +177,108 @@ public class Contenido extends AppCompatActivity {
                 i.putExtra("desc","");
                 i.putExtra("prec","");
                 i.putExtra("esta","");
-               // i.putExtra("url","");
+                // i.putExtra("url","");
                 startActivity(i);
             }
         });
+    }
+
+    private void setCustomerActions(){
+        fab_agregar.setImageResource(R.drawable.cart);
+
+        listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                products p = new products();
+                p.cantidad = 1;
+                p.id_producto = productos.get(i).getKey();
+                p.nombre = productos.get(i).getNomb();
+                p.precio = productos.get(i).getPrec();
+
+                updateTicketInfo(p);
+
+                try{
+                    db.collection("tickets")
+                            .document(ticketId)
+                            .update("productos",  productosEnTicket,
+                                    "preciototal", precioTotal)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(Contenido.this, "Producto añadido", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }catch(Exception e){
+                    Log.d("return", e.getMessage());
+                }
 
 
+            }
+        });
 
+        fab_agregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getBaseContext(), Carrito.class));
+            }
+        });
+    }
+
+    private void updateTicketInfo(products p){
+
+        products aux;
+        Double subtotal;
+        int cantidad;
+
+        if(productosEnTicket.isEmpty()){
+            p.subTotal = p.cantidad * p.precio;
+            productosEnTicket.add(p);
+            precioTotal += p.subTotal;
+            return;
+        }
+
+        for(int i = 0; i < productosEnTicket.size(); i++){
+            aux = productosEnTicket.get(i);
+            if(aux.id_producto.equals(p.id_producto)){
+
+                cantidad = aux.cantidad += 1;
+                subtotal = cantidad * p.precio;
+
+                aux.cantidad = cantidad;
+                aux.subTotal = subtotal;
+
+                productosEnTicket.set(i, aux);
+                precioTotal += p.precio;
+                return;
+            }
+        }
+
+        p.subTotal = p.cantidad * p.precio;
+        productosEnTicket.add(p);
+        precioTotal += p.subTotal;
+        return;
     }
 
 
     // Cambiarlo refProductos a consultaOrdenada para ordenar lista
 
    private void obtenerDatos () {
+       JSONParser parser = new JSONParser();
+       Gson gson = new Gson();
            db.collection("Producto")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            JSONParser parser = new JSONParser();
-                            Gson gson = new Gson();
+
                             try {
 
-                                JSONObject obj, aux;
+                                JSONObject obj;
 
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     pd=new Producto();
@@ -198,6 +307,80 @@ public class Contenido extends AppCompatActivity {
                     }
                 });
 
+           db.collection("tickets")
+                   .whereEqualTo("idusuario", mAuth.getCurrentUser().getUid().toString())
+                   .whereEqualTo("estado", "Borrador").get()
+                   .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                       @Override
+                       public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                           JSONObject obj, aux;
+                           JSONArray array;
+                           products p;
+
+                           for(QueryDocumentSnapshot document: task.getResult()){
+                               try {
+                                   obj = (JSONObject) parser.parse(gson.toJson(document.getData()));
+                                   if(obj.get("preciototal").toString() == "0"){
+                                       precioTotal = 0.0;
+                                       return;
+                                   }
+                                   array = (JSONArray) obj.get("productos");
+                                   precioTotal = (Double) obj.get("preciototal");
+
+                                   for(int i = 0; i < array.size(); i++){
+                                       aux = (JSONObject) array.get(i);
+                                       p = new products();
+
+                                       p.cantidad = Integer.parseInt(aux.get("cantidad").toString());
+                                       p.id_producto = aux.get("id_producto").toString();
+                                       p.nombre = aux.get("nombre").toString();
+                                       p.precio = Double.parseDouble(aux.get("precio").toString());
+                                       p.subTotal = Double.parseDouble(aux.get("subtotal").toString());
+                                       productosEnTicket.add(p);
+                                   }
+
+                               } catch (ParseException e) {
+                                   e.printStackTrace();
+                               }
+                           }
+                       }
+                   });
+
+    }
+
+    public class products{
+
+        int cantidad;
+        String id_producto;
+        String nombre;
+        Double precio;
+        Double subTotal;
+
+        public products(){
+            this.cantidad = 0;
+            this.id_producto = "";
+            this.nombre = "";
+            this.precio = 0.0;
+            this.subTotal = 0.0;
+        }
+
+        public String getId_producto(){
+            return id_producto;
+        }
+        public String getNombre(){
+            return nombre;
+        }
+        public Double getPrecio(){
+            return precio;
+        }
+        public Double getSubtotal(){
+            return subTotal;
+        }
+        public int getCantidad(){
+            return cantidad;
+        }
     }
 }
+
+
 
