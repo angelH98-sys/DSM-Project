@@ -107,6 +107,8 @@ public class SignIn extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
+//                Intent content = new Intent(SignIn.this,Contenido.class);
+//                startActivity((content));
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(SignIn.this, "Algo no anda bien, intentalo más tarde", Toast.LENGTH_SHORT).show();
@@ -124,7 +126,6 @@ public class SignIn extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             ticketExist(task.getResult().getUser().getUid().toString());
                             startActivity(new Intent(SignIn.this, Contenido.class));
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(SignIn.this, "Algo no anda bien, intentalo más tarde", Toast.LENGTH_SHORT).show();
