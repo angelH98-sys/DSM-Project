@@ -1,6 +1,7 @@
 package sv.edu.udb.dsm_project;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -18,12 +19,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignIn extends AppCompatActivity {
 
@@ -33,6 +45,8 @@ public class SignIn extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +63,7 @@ public class SignIn extends AppCompatActivity {
         btnSignInSignUp = findViewById(R.id.btnSignInSignUp);
         etSignInMail = findViewById(R.id.etSignInMail);
         etSignInPassword = findViewById(R.id.etSignInPassword);
+        db = FirebaseFirestore.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
@@ -107,7 +122,9 @@ public class SignIn extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            ticketExist(task.getResult().getUser().getUid().toString());
                             startActivity(new Intent(SignIn.this, Contenido.class));
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(SignIn.this, "Algo no anda bien, intentalo más tarde", Toast.LENGTH_SHORT).show();
@@ -132,9 +149,57 @@ public class SignIn extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            ticketExist(task.getResult().getUser().getUid().toString());
                             startActivity(new Intent(SignIn.this, Contenido.class));
                         }else{
                              Toast.makeText(SignIn.this, "No existe un usuario registrado con esas credenciales", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
+    public void ticketExist(String uid){
+
+        //instancia a autenticacion de Firebase
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        String loginUser= mAuth.getCurrentUser().getUid();
+        Log.i("info","ha pasado por aca: "+loginUser);
+        db.collection("tickets")
+                .whereEqualTo("id_usuario",loginUser)
+                .whereEqualTo("estado","Borrador")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        if (task.isSuccessful()){
+                            if(task.getResult().isEmpty()){
+                                return;
+                            }
+                            Log.i("info","ha pasado por aca, esta vacio: "+String.valueOf(task.getResult().size()));
+
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("estado", "Borrador");
+                            data.put("idusuario", uid);
+                            data.put("fechapago",null);
+                            data.put("preciototal",0.0);
+                            data.put("productos", new ArrayList<>());
+
+                            db.collection("tickets")
+                                    .add(data)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Toast.makeText(getApplicationContext(),"Se ha creado el ticket, Puede Seguir comprando",Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(),"Hubo un pequeño problema",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }
                 });

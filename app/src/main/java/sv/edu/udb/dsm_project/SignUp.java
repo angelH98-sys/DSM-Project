@@ -32,7 +32,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 import com.google.protobuf.StringValue;
+
+import org.json.simple.parser.JSONParser;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
